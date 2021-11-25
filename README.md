@@ -1,6 +1,6 @@
 # CMRIT-COE
 
-- Create your virtual environment, and add it to the `.gitignore` file.
+- Create your <a href="https://docs.python.org/3/library/venv.html">virtual environment</a>, and add it to the `.gitignore` file.
 - Type this command in your terminal
 ```
 pip3 install -r requirements.txt
