@@ -1,1 +1,5 @@
 ./test_pdfs
+Repository/
+output/
+.DS_Store
+pdf_to_txt/.DS_Store
