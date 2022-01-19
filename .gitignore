@@ -4,3 +4,4 @@ output/
 .DS_Store
 pdf_to_txt/.DS_Store
 __pycache__
+references/
