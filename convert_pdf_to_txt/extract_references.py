@@ -26,7 +26,10 @@ def extract_reference_from_txt_file(path_of_txt_file,source_folder_name):
             if re.search(".*References|.*REFERENCES",i):
                 ref_int=1
     except:
-        os.mkdir('references')
+        try:
+            os.mkdir('references')
+        except:
+            print("directory found!")
     txt_file.close()
 
 
