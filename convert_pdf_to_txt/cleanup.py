@@ -25,7 +25,7 @@ def perform_cleanup(file_name):
 
 cleanup_folder = input("Enter the path of the folder to cleanup: ")
 file_list = browse_the_folder(cleanup_folder)
-# print(file_list)
+
 if file_list == []:
     print("Folder Not Found!")
 else:
