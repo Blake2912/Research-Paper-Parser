@@ -1,0 +1,481 @@
+[{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f69"
+  },
+  "Filename": "1971Duda_UseOfTheHoughTransformationToDetectLinesAndCurvesInPicture.pdf",
+  "Title": "USE OF THE HOUGH TRASFORMTION TO DETECT LINES AND CURVES IN PICTURES"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f6a"
+  },
+  "Filename": "1981Ballard_GeneralizingTheHoughTransformToDetectArbitraryShapes.pdf",
+  "Title": "Generalizing The Hough Transform To Detect Arbitrary Shapes"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f6b"
+  },
+  "Filename": "1981Fischler_RANSAC.pdf",
+  "Title": "Random Sample Consensus: A paradigm for model fitting with applications to Image Analysis and  mordern cartography"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f6c"
+  },
+  "Filename": "1987Bergholm_EdgeFocusing.pdf",
+  "Title": "Edge Focussing"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f6d"
+  },
+  "Filename": "1988Harris_AcombinedCornerAndEdgeDetection.pdf",
+  "Title": "A combined Corner And Edge Detection"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f6e"
+  },
+  "Filename": "1991Swain_ColorIndexing.pdf",
+  "Title": "Color Indexing"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f6f"
+  },
+  "Filename": "1992Besl_AMethodForRegistrationOf3-D(ICP).pdf",
+  "Title": "A Method For Registration Of 3-D Shapes"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f70"
+  },
+  "Filename": "1997Beis_ApproximateNearestNeighbourSerachInHighDimension.pdf",
+  "Title": "Shape Indexing Using approximate nearest Neighbour Serach In High Dimensional Spaces"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f71"
+  },
+  "Filename": "1997Schmid_LocalGrayvalueInvariantsForImageRetrieval.pdf",
+  "Title": "Local Gray value Invariants For Image Retrieval"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f72"
+  },
+  "Filename": "1998_EdgeDetectionTechniquesAnOverview.pdf",
+  "Title": "Edge Detection Techniques An Overview"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f73"
+  },
+  "Filename": "1999Johnson_UsingSpinImagesForEfficientObjectRecognition.pdf",
+  "Title": "Using Spin Images For Efficient Object Recognition in Cluttered 3-D Scenes"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f74"
+  },
+  "Filename": "1999Lowe_(SIFT)ObjectRecognitionFromLocalScale-InvariantFeatures.pdf",
+  "Title": "Object Recognition From Local Scale-Invariant Features"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f75"
+  },
+  "Filename": "2002Martin_VolumetricMapsWithMobileRobots.pdf",
+  "Title": "Real-Time Aquisition of Compact Volumetric 3D Maps With Mobile Robots"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f76"
+  },
+  "Filename": "2004Borges_LineExtractionIn2DRangeImagesF.pdf",
+  "Title": "Line Extraction In 2D Range Images For Mobile Robotics"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f77"
+  },
+  "Filename": "2004Csurka_VisualCategorizationWithBagsOfKeypoints.pdf",
+  "Title": "Visual Categorization With Bags Of Keypoints"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f78"
+  },
+  "Filename": "2004Lowe_DistinctiveImageFeaturesFromSc_Springer.pdf",
+  "Title": "Distinctive Image Features From Scale- Invariant Keypoints"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f79"
+  },
+  "Filename": "2005Dalal_HistogramsOfOrientedGradientsForHumanDetection.pdf",
+  "Title": "Histograms Of Oriented Gradients For Human Detection"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f7a"
+  },
+  "Filename": "2005Mozos_LearningOfPlacesUsingAdaboost.pdf",
+  "Title": "Supervised Learning Of Places Using Adaboost"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f7b"
+  },
+  "Filename": "2006Bay_SURF_SpeededUpRobustFeatures.pdf",
+  "Title": "SURF:Speeded Up Robust features"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f7c"
+  },
+  "Filename": "2006Rosten_MachineLearningForHigh-speedCornerDetection.pdf",
+  "Title": "Machine Learning For High-speed Corner Detection"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f7d"
+  },
+  "Filename": "2006White_SLAMEssentialAlgorithmsPart1.pdf",
+  "Title": "Simultaneous Localization and Mapping: Part 1"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f7e"
+  },
+  "Filename": "2007Tarsha-Kurdi_AutomaticDetectionOf3DBuildingRoofPlanesFromLidar.pdf",
+  "Title": "Hough-Transform and Extended RANSAC algorithms for Automatic Detection of 3D Building Roof Planes from Lidar Data"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f7f"
+  },
+  "Filename": "2008Bay_SpeededUpRobustFeatures (SURF).pdf",
+  "Title": "Speeded Up Robust Features"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f80"
+  },
+  "Filename": "2008Rosten_FasterAndBetterAMachineLearningApproachToCornerDetection.pdf",
+  "Title": "Faster And Better:A Machine Learning Approach To Corner Detection"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f81"
+  },
+  "Filename": "2008Rusu_Towards3DPointCloudBasedObjectMapsForHouseholdEnvironments.pdf",
+  "Title": "Towards 3D Point cloud based object maps for household environments"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f82"
+  },
+  "Filename": "2010Mair_AGAST.pdf",
+  "Title": "Adaptive and Generic Corner Detection Based on the Accelerated Segment Test"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f83"
+  },
+  "Filename": "2010Pronobis_MultiModalSemanticPlaceClassification.pdf",
+  "Title": "Multi-modal Semantic Place Classification "
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f84"
+  },
+  "Filename": "2010Xiong_UsingContextToCreateSemantic3DModelsOfIndoorEnvironments.pdf",
+  "Title": "Using Context to Create Semantic 3D Models of Indoor Environments "
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f85"
+  },
+  "Filename": "2011Collet_StructureDiscoveryInMulti-modalData.pdf",
+  "Title": "Structure Discovery in Multi-modal Data: a Region-based Approach"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f86"
+  },
+  "Filename": "2011Koppula_SemanticLabelingOf3dPointCloudsForIndoorScenes.pdf",
+  "Title": "Semantic Labeling Of 3D Point Clouds For Indoor Scenes"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f87"
+  },
+  "Filename": "2011Lai_ALargeScaleHierarchicalMulti-ViewRGB-DObjectDataset.pdf",
+  "Title": "A Large-Scale Hierarchical Multi-View RGB-D Object Dataset"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f88"
+  },
+  "Filename": "2011Leutenegger_BRISK_BinaryRobustInvariantScalableKeypoints.pdf",
+  "Title": "BRISK: Binary Robust Invariant Scalable Keypoints"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f89"
+  },
+  "Filename": "2012Anand_ContextuallyGuidedSemanticLabeling3DClouds.pdf",
+  "Title": "Contextually Guided Semantic Labeling and Search for 3D Point Clouds"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f8a"
+  },
+  "Filename": "2012Henry_RGB-DMapping.pdf",
+  "Title": "RGB-D mapping: Using Kinect-style depth cameras for dense 3D modeling of indoor environments"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f8b"
+  },
+  "Filename": "2012Ohtani_ShapeRecognitionUsingUltrasonicSensorArray.pdf",
+  "Title": "Shape Recognition and Position Measurement of an Object Using an Ultrasonic Sensor Array"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f8c"
+  },
+  "Filename": "2012Silberman_IndoorSegmentationAndSupportInferenceFromRGBDImages.pdf",
+  "Title": "Indoor Segmentation and Support Inference from RGBD Images "
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f8d"
+  },
+  "Filename": "2013Alphonso_APolynomialBasedSLAMAlgorithmForMobileRobots.pdf",
+  "Title": "A polynomial based SLAM algorithm for Mobile Robots using ultrasonic sensors - Experimental Results "
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f8e"
+  },
+  "Filename": "2014Fernadez_DoorDetectionSystem.pdf",
+  "Title": "A Real-time Door Detection System for Domestic Robotic Navigation"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f8f"
+  },
+  "Filename": "2014Krajnik_LongTermTopologicalLocalization.pdf",
+  "Title": "Long–Term Topological Localisation for Service Robots in Dynamic Environments using Spectral Maps"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f90"
+  },
+  "Filename": "2015Adan_TowardsTheAutomatic ScanningOfIndoorsWithRobots.pdf",
+  "Title": "Towards the Automatic Scanning of Indoors with Robots"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f91"
+  },
+  "Filename": "2015Ma_InfraredAndVisibleImageFusion.pdf",
+  "Title": "Infrared and visible image fusion via gradient transfer and total variation minimization"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f92"
+  },
+  "Filename": "2016Faulhammer_AutonomousLearningOfObjectModelsOnAMobileRobot.pdf",
+  "Title": "Autonomous Learning of Object Models on a Mobile Robot "
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f93"
+  },
+  "Filename": "2016Guo_AComprehensivePerformanceEvaluationof3DLocalFeatureDescriptors_final_Copy.pdf",
+  "Title": "A Comprehensive Performance Evaluation of 3D Local Feature Descriptors "
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f94"
+  },
+  "Filename": "2017Bai_GrowingRandomForestOnDeepCNNforSceneCategorization.pdf",
+  "Title": "Growing random forest on deep convolutional neural networks for scene categorization "
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f95"
+  },
+  "Filename": "2017Berger_ASurveyOfSurfaceReconstructionFromPointClouds.pdf",
+  "Title": "A Survey of Surface Reconstruction from Point Clouds"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f96"
+  },
+  "Filename": "2017Chang_Deep_Adaptive_Image_ICCV_2017_paper.pdf",
+  "Title": "Deep Adaptive Image Clustering"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f97"
+  },
+  "Filename": "2017Gonzalez_RobotIndoorSceneClassification.pdf",
+  "Title": "On robot indoor scene classification based on descriptor quality and efficiency "
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f98"
+  },
+  "Filename": "2017Maligo_ClassificationOfOutdoor3DlidarData.pdf",
+  "Title": "Classification of Outdoor 3D Lidar Data Based on Unsupervised Gaussian Mixture Models"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f99"
+  },
+  "Filename": "2018Cruz_SemanticLocalizationofaRobotinaRealHome.pdf",
+  "Title": "Semantic Localization of a Robot in a Real Home "
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f9a"
+  },
+  "Filename": "2018Jiang_PointSIFT.pdf",
+  "Title": "PointSIFT: A SIFT-like Network Module for 3D Point Cloud Semantic Segmentation"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f9b"
+  },
+  "Filename": "2018Siva_OmnidirectionalMultisensoryPerceptionFusionLongTermPlaceRecognition..pdf",
+  "Title": "Omnidirectional Multisensory Perception Fusion for Long-Term Place Recognition"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f9c"
+  },
+  "Filename": "2018Wang_Lidar_based_localization_algorithm.pdf",
+  "Title": "A Single LiDAR-Based Feature Fusion Indoor Localization Algorithm"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f9d"
+  },
+  "Filename": "2019Kuan_ComparativeStudyOfIntelR200Kinectv2.pdf",
+  "Title": "Comparative Study of Intel R200, Kinect v2, and Primesense RGB-D Sensors Performance Outdoors"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f9e"
+  },
+  "Filename": "2019Zhao_RobustNormalEstimationFor3DLiDARPoint.pdf",
+  "Title": "Robust Normal Estimation for 3D LiDAR Point Clouds in Urban Environments "
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43f9f"
+  },
+  "Filename": "2020Xie_SceneRecognitionAComprehensiveSurvey.pdf",
+  "Title": "Scene recognition: A comprehensive survey"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43fa0"
+  },
+  "Filename": "python0.pdf",
+  "Title": "Multiple documents summarization based on evolutionary optimization algorithm"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43fa1"
+  },
+  "Filename": "python11.pdf",
+  "Title": "DBpedia - A crystallization point for the Web of Data"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43fa2"
+  },
+  "Filename": "python13.pdf",
+  "Title": "Wikimantic: Toward effective disambiguation and expansion of queries "
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43fa3"
+  },
+  "Filename": "python16.pdf",
+  "Title": "A Bayesian Model for Joint Unsupervised Induction of Sentiment, Aspect and Discourse Representations"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43fa4"
+  },
+  "Filename": "python19.1.1.pdf",
+  "Title": "Pattern matching algorithms"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43fa5"
+  },
+  "Filename": "python19.1.2.pdf",
+  "Title": "OntoWiki:A tool for Social, Semantic Collaboration"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43fa6"
+  },
+  "Filename": "python19.1.3.pdf",
+  "Title": "D2R MAP – A Database to RDF Mapping Language"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43fa7"
+  },
+  "Filename": "python19.1.pdf",
+  "Title": "What have Innsbruck and Leipzig in common? Extracting Semantics from Wiki Content. "
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43fa8"
+  },
+  "Filename": "python19.4.pdf",
+  "Title": "Data provenance: Some Basic Issues"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43fa9"
+  },
+  "Filename": "python19.pdf",
+  "Title": "DBpedia: A Nucleus for a Web of Open Data"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43faa"
+  },
+  "Filename": "python20.pdf",
+  "Title": "What have Innsbruck and Leipzig in common? Extracting Semantics from Wiki Content. "
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43fab"
+  },
+  "Filename": "python21.pdf",
+  "Title": "DBpedia Mobile: A Location-Aware Semantic Web Client "
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43fac"
+  },
+  "Filename": "python22.pdf",
+  "Title": "Linked Data: Principles and State of the Art"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43fad"
+  },
+  "Filename": "python23.pdf",
+  "Title": "Linked Data - The Story So Far"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43fae"
+  },
+  "Filename": "python24.pdf",
+  "Title": "Fresnel - A Browser-Independent Presentation Vocabulary for RDF "
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43faf"
+  },
+  "Filename": "python25.pdf",
+  "Title": "Semantic Enrichment of Twitter Posts for User Profile Construction on the Social Web "
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43fb0"
+  },
+  "Filename": "python26.pdf",
+  "Title": "Query Phrase Expansion Using Wikipedia in Patent Class Search "
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43fb1"
+  },
+  "Filename": "python27.pdf",
+  "Title": "Document and Query Expansion Models for Blog Distillation"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43fb2"
+  },
+  "Filename": "python28.pdf",
+  "Title": "Automatically Recognizing Intended Messages in Grouped Bar Charts "
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43fb3"
+  },
+  "Filename": "python29.pdf",
+  "Title": "OntoLDA: An Ontology-based Topic Model for Automatic Topic Labeling "
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43fb4"
+  },
+  "Filename": "python30.pdf",
+  "Title": "Automatic Topic Labeling using Ontology-based Topic Models "
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43fb5"
+  },
+  "Filename": "python31.pdf",
+  "Title": "The Design, Implementation and use of the Ngram Statistics package"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43fb6"
+  },
+  "Filename": "python32.pdf",
+  "Title": "DBpedia - A crystallization point for the Web of Data"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43fb7"
+  },
+  "Filename": "python7.pdf",
+  "Title": "Wikimantic: Toward effective disambiguation and expansion of queries"
+},{
+  "_id": {
+    "$oid": "624c0f84003b3b4095b43fb8"
+  },
+  "Filename": "seqClustRAnRPackageforSequenceClustering.pdf",
+  "Title": "SeqClustR: An R Package for Sequence Clustering"
+}]
