@@ -86,7 +86,6 @@ def get_headings_from_list(txt_file_list,txt_folder_name):
         for j in heading_list:
             processed_txt = replaceObject.split(j)
             processed_heading = processed_txt[len(processed_txt) - 1].upper().strip()
-            # print(processed_heading)
             if processed_heading in heading_frequency_dict:
                 heading_frequency_dict[processed_heading] += 1
             else:
