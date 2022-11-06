@@ -13,4 +13,3 @@ This will install all the required files on to your `venv`
 ```
 python3 main.py
 ```
-Test
