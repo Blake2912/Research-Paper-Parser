@@ -9,4 +9,7 @@ This will install all the required files on to your `venv`
 
 * To create virtual environtments refer <a href="https://docs.python.org/3/library/venv.html">here!</a>
 
-* `cd` to "convert_pdf_to_txt" and run the python scripts to get the results
+* Run the following command and follow the menu options to execute
+```
+python3 main.py
+```
