@@ -1,0 +1,1674 @@
+Temporal rank functions for forward secrecy
+
+Rob Delicata and Steve Schneider
+Department of Computing, University of Surrey, UK.
+{R.Delicata, S.Schneider} @surrey.ac.uk
+
+Abstract
+
+A number of key establishment protocols claim the prop-
+erty of forward secrecy, where the compromise of a long-
+term key does not result in the compromise of previously
+computed session-keys. We describe how such protocols can
+be modelled using the process algebra CSP and explain
+why the well-known rank function approach is incapable
+of proving their correctness. This shortcoming motivates us
+to propose a generalised proof technique based on the novel
+concept of a temporal rank function. We apply this approach
+to two examples: a protocol due to Boyd and the Cliques (A-
+GDH.2) group key agreement protocol.
+
+1. Introduction
+
+A number of cryptographic protocols have appeared in
+the literature that claim to provide forward secrecy. The
+idea of forward secrecy is that if a long-term key is com-
+promised then any session-keys that were previously es-
+tablished using the long-term key should remain secret.
+Forward secrecy is important in scenarios where session-
+keys need protection beyond the time-span during which
+they are used. These situations typically arise when session-
+keys are used for data encryption, rather than just au-
+thentication. There appears to be a disparity between the
+growing number of protocols that claim forward secrecy
+[2, 7, 17, 16, 1, 18, 15] and the work carried out on its for-
+mal analysis. In contrast to secrecy and authentication, the
+formal verification of forward secrecy has, with some ex-
+ceptions [20, 4], received little attention in the literature.
+This paper fills the gap for the rank function approach.
+
+This paper demonstrates how the notion of a rank func-
+tion can be generalised to permit the verification of for-
+ward secrecy. The rank function approach [23] has pre-
+viously been used to reason about authentication, secrecy
+and non-repudiation in a number of cryptographic proto-
+cols [23, 25, 9, 5]. In the standard approach, a rank func-
+tion is used to partition the message-space of a protocol
+such that all messages which should remain secret are as-
+
+signed a rank of Sec and all messages that might be public
+are assigned a rank of pub. Typically, the protocol is mod-
+elled using the process algebra Communicating Sequential
+Processes (CSP) [22, 24]. The central rank theorem gives a
+series of healthiness conditions that the function must sat-
+isfy in order for us to conclude that the protocol does actu-
+ally maintain the secrecy of a given set of messages. Stated
+another way, the rank theorem gives the conditions under
+which it is reasonable to conclude that the sets of public
+and secret messages are disjoint.
+
+It turns out that this all-or-nothing view of secrecy is un-
+able to capture properties of protocol models which include
+compromised keys. Since compromised keys become pub-
+lic after some initial period of secrecy they can neither be
+classified as entirely secret nor entirely public, and the stan-
+dard approach cannot model values that inhabit this middle-
+ground. Since forward secrecy is dependent on the con-
+cept of compromised keys, protocols which provide forward
+secrecy are unverifiable using the standard approach. Al-
+though this incompleteness motivates the richer concept of
+a temporal rank that we propose here, a discussion of the
+shortcoming is somewhat incidental to the main thrust of
+the paper. For this reason we delay it until Section 5. Our
+goal is not to introduce yet-another-verification-technique
+but to show how an existing technique can be generalised
+to permit reasoning about a wider class of security proper-
+ties.
+
+In the next section we describe how compromised keys
+can be modelled using CSP and show how forward secrecy
+can be formalised as a trace specification over such a proto-
+col model. In Section 3 we introduce the idea of a temporal
+rank function and establish a central theorem that gives con-
+ditions under which we can conclude that a protocol guar-
+antees forward secrecy. We demonstrate this approach on
+the running example of a protocol due to Colin Boyd and
+in Section 4 consider a further example: the Cliques (A-
+GDH.2) group key agreement protocol. As mentioned, Sec-
+tion 5 discusses why the original rank function approach
+fails in the presence of compromised keys, and Section 6
+concludes. Some knowledge of CSP is assumed but we pro-
+vide a summary of relevant notation in Appendix A.
+
+Proceedings of the 18th IEEE Computer Security Foundations Workshop (CSFW’05)
+1063-6900/05 $20.00 © 2005 IEEE
+Authorized licensed use limited to: NATIONAL INSTITUTE OF TECHNOLOGY CALICUT. Downloaded on June 29,2010 at 07:49:36 UTC from IEEE Xplore. Restrictions apply.
+2. Formalising forward secrecy
+
+The concept of forward secrecy was first introduced by
+Giinther [10] who used the term perfect forward secrecy.
+We follow the lead of other authors [14, 3] in dropping the
+word perfect and avoiding confusion with the unrelated con-
+cept of perfect secrecy.
+
+Forward secrecy is captured by the following definition:
+
+Definition 1 A key establishment protocol provides for-
+ward secrecy if compromise of the long-term keys of a set
+of principals does not compromise the session-keys estab-
+lished in previous protocol runs involving those principals.
+
+As arunning example we use a protocol due to Boyd [3] that
+takes its cue from an earlier idea by Wiener [26]. The pro-
+tocol allows a session-key k to be established between two
+principals, a and b. a generates a fresh asymmetric key-pair
+(pk, sk) and sends the public half to b along with a fresh
+nonce, na, and the signature of pk under a long-term sign-
+ing key Sig(a). b uses the public-key to encrypt the session-
+key & and sends it to a along with a signature containing a
+hash of the session-key:
+
+l1oa—7 »b
+2 b > a
+
+pk “na- {pk . Dh sig(a)
+{K}pe > (i(k) a> nat sig)
+
+(we write m1 - mz for the pairing of messages mj, and m2
+and use {m}, to denote the encryption of m under a key &).
+This protocol aims to meet the forward secrecy property of
+Definition 1 if a and b are honest and the long-term signing
+keys Sig(a) and Sig(b) are not compromised until after the
+protocol has ended. This can be argued informally in the fol-
+lowing way. The keys Sig(a) and Sig(b) are used only to au-
+thenticate the session-key, and although their disclosure al-
+lows an attacker to masquerade as a or b in future protocol
+runs, it does not allow him to recover the past session-key.
+The session-key can only be recovered with the private-key,
+sk, which is freshly generated for each protocol run. Asym-
+metric key-pairs, such as (pk, sk), which are discarded after
+a single protocol run are termed ephemeral keys, and it is
+the use of ephemeral keys that enables the protocol to pro-
+vide forward secrecy.
+
+Boyd and Mathuria [3] call the property in Definition 1
+full forward secrecy in distinction to the weaker property of
+partial forward secrecy:
+
+Definition 2 A protocol provides partial forward secrecy if
+compromise of the long-term keys of one or more specific
+principals does not compromise the session keys established
+in previous protocol runs involving those principals.
+
+The difference between full and partial forward secrecy cen-
+tres around the number of long-term keys that are compro-
+mised. For example, a protocol involving two honest par-
+ties, A and B, will provide full forward secrecy if a past
+
+session-key remains secure when both A’s and B’s long-
+term keys are compromised. If this property is not met, how-
+ever, the protocol may still provide partial forward secrecy
+if the compromise of just one long-term key (either A’s or
+B’s, but not both) prevents the intruder from discovering a
+past session-key. Full forward secrecy takes a pessimistic
+view by assuming the disclosure of all long-term keys, and
+for the purpose of protocol verification it will often be pru-
+dent to apply this stronger condition. For protocol analy-
+sis', however, it is often useful to consider partial forward
+secrecy since, if the protocol does not meet the weaker goal,
+it will certainly not satisfy the stronger condition. For sim-
+plicity, the present work concentrates on the notion of par-
+tial secrecy, although this is by no means a limitation of
+our approach. In particular, we will show that Boyd’s proto-
+col achieves partial forward secrecy with respect to the key
+Sig(A) for some (honest) initiator A.
+
+Pereira makes an interesting distinction between what he
+terms complete forward secrecy and individual forward se-
+crecy [19]. In complete forward secrecy it is assumed that
+the past protocol runs were executed without any interfer-
+ence by the intruder, who is passive and merely records the
+messages that pass on the network. In contrast, individual
+forward secrecy assumes an intruder who has potentially
+manipulated the messages of one or more principals in pre-
+vious runs. The terms ‘complete’ and ‘individual’ are ap-
+propriate for Pereira’s focus on principals in group Diffie-
+Hellman protocols. Here, however, we will refer to them as
+passive and active forward secrecy, respectively, in recog-
+nition of the intruder’s role in past protocol runs. When
+we talk about forward secrecy in this paper we are refer-
+ring specifically to the notion of active forward secrecy.
+Clearly, a protocol that provides active forward secrecy also
+achieves the weaker goal of passive forward secrecy.
+
+2.1. Compromised keys
+
+We model protocols in CSP where each principal, and
+a special intruder process called ENEMY, are represented
+by processes. A principal A can transmit a message M to B
+by performing the event rrans.A.B.M. Conversely, B can re-
+ceive this message by performing rec.B.A.M. We assume
+a worst-case-scenario where all data communication (any-
+thing passed on the channels trans and rec) passes through
+the intruder. This arrangement is shown in Figure 2. A side-
+effect of this network composition is that ENEMY, unlike
+the user processes, ‘hears’ messages on channel trans and
+‘says’ messages on channel rec.
+
+1 Our distinction between protocol verification and protocol analysis
+lies in the goal of the endeavour: the first aims to prove correctness
+whilst the second attempts to discover attacks. In general, failure to
+find an attack does not imply correctness.
+
+Proceedings of the 18th IEEE Computer Security Foundations Workshop (CSFW’05)
+1063-6900/05 $20.00 © 2005 IEEE
+Authorized licensed use limited to: NATIONAL INSTITUTE OF TECHNOLOGY CALICUT. Downloaded on June 29,2010 at 07:49:36 UTC from IEEE Xplore. Restrictions apply.
+ 
+
+ 
+
+PAIRING UNPAIRING
+SE my, SE my SE my, - my
+SE my - my SE my, SE mg
+MEMBERSHIP HASHING
+(meS) Sem
+Sem ” SEA(m)
+ENCRYPTION DECRYPTION
+Stm Sek SE{m}, SER
+SE {m}x Stm
+
+Figure 1. Intruder deductions
+
+ 
+
+Forward secrecy becomes relevant in situations where
+long-term keys can become compromised. We are not con-
+cerned with how the keys are leaked (as a result of crypt-
+analysis, for example), but only with the fact that they are.
+We develop a process ENEMY that represents an active
+Dolev-Yao style intruder [8] with the additional ability to
+learn long-term keys that have been leaked.
+
+2.1.1. The intruder process The model of ENEMY is
+built around a set S of facts that the intruder knows and a
+‘generates’ relation + that the intruder can use to deduce
+new facts. We write S + m if the intruder can generate the
+message m by knowing all messages in the set S. The ca-
+pabilities captured by | are given in Figure 1. The process
+ENEMY is parameterised by a set 7K — the Intruder’s Ini-
+tial Knowledge — that contains the facts available to the in-
+truder at the start of the protocol. This set will typically in-
+clude the usernames of all principals, any long-term public-
+keys and other keys that the intruder may reasonably know.
+
+The intruder can (i) hear any message on the network
+and add that message to his knowledge set, (ii) send to any
+principal any message generable under F, and (iii) compro-
+mise any key in a set TS of temporary secrets and add it to
+his knowledge set:
+
+ENEMY = Enemy(IIK)
+
+Enemy(S) =
+trans?a?b?m — Enemy(S U {m})
+o0 eu, rec.a.b.m — Enemy(S)
+
+m|SEm
+
+OL), leak.m — Enemy(S U {m})
+
+(where U is the set of identities of all principals). The defini-
+tion of ENEMY is not entirely general since we can adapt it
+to facilitate the compromise of different sets of keys. Doing
+so will be dependent on both the protocol under considera-
+tion and the precise forward secrecy goal that we intend to
+verify. To reason about full forward secrecy in Boyd’s proto-
+col, for example, we would define TS = {Sig(a) | a € U}.
+Note that the intruder can always signal his knowledge of a
+
+ 
+
+ 
+
+Figure 2. Network arrangement
+
+ 
+
+message M by performing the event trans.E.E.M, where E
+is the intruder’s identity.
+
+2.1.2. The principals We model each principal that takes
+part in the protocol as a CSP process representing the pro-
+tocol steps performed by that principal. For example, con-
+sider User! (a, b, pk, na) from Figure 3. This process models
+a principal a running Boyd’s protocol as initiator (denoted
+by the superscripted J) with b, where pk is the ephemeral
+public-key and na is the nonce used in the run. Similarly,
+User®(b, a,k) is a principal b running as responder, appar-
+ently with a, using the session-key k. On receipt of the first
+protocol message, b verifies the signature to satisfy himself
+that the message originated from a. The responder asserts
+his belief that k will be a secret shared only with a by per-
+forming the signal event signal.b.a.k.
+
+The network composition is shown in Figure 3. The pro-
+cess USER, represents the entire behaviour of a principal a
+in both initiator and responder roles. In the initiator case a
+session variable pk is chosen from the set PK,» of public-
+keys that a will use in runs with a particular principal b.
+The function nonce is an injective mapping from public-
+keys to nonces such that nonce(pk) is the nonce that a will
+use in the run involving pk. Similarly, as a responder, the in-
+terleaving is indexed by the session-key k € Kya. The sets
+PKap and K,s of public- and session-keys are all pairwise
+disjoint.
+
+We incorporate the ENEMY and user processes into a
+standard CSP protocol model in which an arbitrary num-
+ber of principals can engage in arbitrarily many instances of
+the protocol concurrently. By convention, the process repre-
+senting the entire network is called NET.
+
+2.2. Statement of forward secrecy
+
+A CSP process can be characterised by its traces, where
+a trace represents one possible sequence of events that the
+process can perform. For a process P, traces(P) is the set
+of all possible traces of P. The set traces(P) is always non-
+empty since every process can perform the empty trace ()
+
+Proceedings of the 18th IEEE Computer Security Foundations Workshop (CSFW’05)
+1063-6900/05 $20.00 © 2005 IEEE
+Authorized licensed use limited to: NATIONAL INSTITUTE OF TECHNOLOGY CALICUT. Downloaded on June 29,2010 at 07:49:36 UTC from IEEE Xplore. Restrictions apply.
+ 
+
+User! (a, b, pk, na) =
+trans.a.b.{(pk «na - {pk - b} sig¢a))
+— rec.a.b?({khnn- {h(k) -a- na} sig(a))
+— Stop
+
+User® (b, a, k) =
+
+rec.b.a? (pk - na{pk - b} sig¢a))
+— signal.b.a.k
+
+— trans.b.a.({k} px - {h(k) - a - na}sieta))
+— Stop
+
+USER, =
+| | lu (| | PK User! (a, b, pk, nonce(pk)) |||
+User® (a, b, k))
+
+| | lick
+
+NET = ( USER.) \[ {| trans, rec |}]| ENEMY
+
+Hsu
+
+Figure 3. CSP model of Boyd’s protocol
+
+ 
+
+and is prefix-closed since, if s “ t is a trace of P, then s is
+also a trace of P.
+
+A trace specification is a predicate on traces, and we
+write W(tr) if the predicate W holds for a trace tr. A pro-
+cess P satisfies W (written P sat W) if all its traces satisfy
+W:
+
+Psat W © Vir € traces(P).W(tr)
+
+We are already in a position to prove that any message
+that can be sent by ENEMY must be generable from the set
+ITK together with the messages input on channels trans and
+leak.
+
+Theorem 1
+
+ENEMY sat
+(IK U (ar 4) {trans, leak})) + tr |) rec
+
+Proof (sketch). We prove by a mutual recursion induc-
+tion that Enemy(S) sat (S U (ir 4) {trans,leak})) - a 4
+rec and the result follows from the fact that ENEMY =
+Enemy(IIK). Oo
+
+We introduce two important trace specifications. The
+first is the secret predicate which states that no event t € T
+occurs in the trace fr:
+
+Definition 3
+secret T = tr | T = (}
+
+(where tr | T is the trace zr restricted to events in T). Al-
+though T is a set of events, it will be convenient to think of
+it as a set of messages that we wish to keep secret, and we
+abuse the notation to write (for example) T = {M} where
+
+we should more properly have written T = {trans.a.b.M |
+a€U,beEU}.
+
+The second important trace predicate is St_precedes
+which states that, for disjoint sets R and T, any occurrence
+of anevent? € T in atrace will be strictly preceded by some
+occurrence of an event r € R:
+
+Definition 4
+
+R St_precedes T =
+rlTAQ=>
+dir’ <a [RAQ Ar -T=()
+
+Consider the process NET from Figure 3. If a trace tro €
+traces(NET) contains the event leak.Sig(A) we know that
+the intruder has, at that point, learned the signing-key of
+principal A. Similarly, if tr9 contains the event signal.B.A.K
+we can conclude that, at that point, B was willing to estab-
+lish a key K with a principal who B believed to be A. If
+leak.Sig(A) appears in the trace before signal.B.A.K then
+the ephemeral key used to encrypt K may have come from
+the intruder, who invents a key-pair (PK, SK) and a nonce
+NA and uses Sig(A) to masquerade as A:
+
+: {PK, Bh sigca)
+: {K}px, {h(K),A, NA} siocp)
+
+1. E(A)>B
+2. B— E(A)
+
+(where F(A) denotes the intruder masquerading as A). If, on
+the other hand, signal.B.A.K occurs before leak.Sig{A) (i-e.,
+if the predicate {signal.B.A.K} St_precedes {leak.Sig(A)}
+holds) then the forward secrecy property tells us that the
+compromise of Sig(A) should not result in the compromise
+of the (previously established) session-key K. We can there-
+fore state the claim secret{K}: the intruder never learns K.
+
+This is the heart of our statement of forward secrecy: that
+all session-keys established between honest principals be-
+fore the compromise of the long-term key should remain
+secret even after the long-term key has been leaked. If k is
+a session-key established between two honest principals a
+and b and /k is a long-term key used to establish k, we de-
+fine the trace specification fs that captures this notion of for-
+ward secrecy:
+
+Definition 5
+fs(k, Ik) =
+
+{signal.b.a.k} St_precedes {leak.ik}(tr)
+=> secret {k} (rr)
+
+For our running example, represented by the process NET,
+we can state the specification as:
+
+NET sat fs(K, Sig(A))
+
+That is, if B is willing to establish the session-key K € Kpa
+with A, before the key Sig(A) is compromised, then K re-
+mains a secret known only to A and B. Note that, if B will-
+
+Proceedings of the 18th IEEE Computer Security Foundations Workshop (CSFW’05)
+1063-6900/05 $20.00 © 2005 IEEE
+Authorized licensed use limited to: NATIONAL INSTITUTE OF TECHNOLOGY CALICUT. Downloaded on June 29,2010 at 07:49:36 UTC from IEEE Xplore. Restrictions apply.
+ingly engages in a run with a dishonest principal then nei-
+ther secrecy nor forward secrecy of the resulting session-
+key can be expected.
+
+2.3. Restricting the network
+
+Let ko € Kya be a session-key established using a long-
+term key [kp between two honest principals a and b. Our
+goal is to prove that NET sat fs(ko, /ko) for some protocol
+model NET. However, we can ease this task by first apply-
+ing some simple CSP manipulation. Expanding the defini-
+tion of fs for NET, we obtain the goal:
+
+NET sat
+({signal.b.a.kg} St_precedes {leak.lkg}
+=> secret {ko})
+
+Let TR be the set of traces of NET that satisfy the antecedent
+{signal.b.a.ko} St_precedes {leak.Iko} :
+
+Definition 6
+
+TR = {tr € traces(NET) |
+{signal.b.a.ko} St_precedes {leak.lkg}(tr)}
+
+Lemma 1 TR C traces(NET)
+
+This is an immediate consequence of Definition 6.
+
+TR is both non-empty (since the empty trace () satis-
+fies the antecedent) and prefix-closed (since, if s ~ tf sat-
+isfies the antecedent then so will s). The trace set TR can be
+seen as representing a restriction of the network described
+by NET. Since a CSP process is defined in terms of its traces
+we can (at least in this case) define a new process, NET’,
+whose traces are precisely those in the set TR. Intuitively,
+NET’ is the process whose traces are those of NET in which
+signal.b.a.kg always precedes leak.lkg.
+
+Let K be the set of session-keys from which ko is drawn
+and let LK be the set of long-term keys from which Jk is
+drawn. RES is a process that blocks the event leak.Jkg until
+such time as signal.b.a.ko has occurred:
+
+RES) = signal?b?a?k >
+if kK = kp then RUNy else RES
+
+QO leak?k : (LK \ {Iko}) — RES
+
+where X = {| signal, leak |}
+
+RUNy is a special process that is always willing to com-
+municate any event in the set X (See Appendix A). Based
+on this we can define NET’ as follows:
+
+Definition 7 NET’ = NET \[X]| RES
+
+NET’ forces the synchronisation of all leak and signal
+events between NET and RES, and we can demonstrate that
+NET’ has as its traces precisely the set TR:
+
+Theorem 2 traces(NET’) = TR
+
+Proof. Consider a trace tr € traces(NET"). By definition
+of NET’, tr © traces(NET || {| signal, leak |}]| RES). The
+semantics of CSP interface parallel then tell us that tr €
+traces(NET) (i) and tr | {| signal, leak |} © traces(RES).
+By definition of RES we have that whenever leak.lkg ap-
+pears in fr it is preceded by an event signal.b.a.kg for some
+a, b, and so {signal.a.b.ko} St_precedes {leak.lko } (tr) (ii).
+Finally from Definition 6, (i) and (ii) yield that tr € TR. The
+same argument works in the opposite direction to show that
+tr € TR = tr € traces(NET'’). oO
+
+The assumption {signal.b.a.kg} St_precedes {leak.lko}
+on NET has been absorbed into NET’ and this enables us to
+rewrite the fs trace specification to a simpler form:
+
+NET’ sat secret {ko}
+
+In doing so we have reduced a forward secrecy predicate
+over the whole network (NET) to a secrecy predicate over a
+restricted subset (NET’) of that network. If we can prove
+that NET’ sat secret {ko} then we will have shown that
+NET sat fs(ko,lko). Applied to our running example, we
+are left to prove that NET’ sat secret {K} where K € Koga
+for some honest principals a and b.
+
+3. Temporal rank functions
+
+In this section we introduce a proof technique suitable
+for verifying whether the forward secrecy property of the
+previous section holds for a given protocol. In particular, we
+obtain a specialised theorem that applies to secrecy proper-
+ties on the protocol network. This theorem is the core of the
+proof strategy presented in this paper; it provides a suffi-
+cient list of conditions whose achievement guarantees that
+NET’ sat secret T for a set T.
+
+3.1. Time tags
+
+Consider an instance of the Boyd protocol where the
+session-key K is established between A and B using the
+long-term key Sig(A) and that Sig(A) is subsequently com-
+promised at some time n. For simplicity we assume that B’s
+signing key, Sig(B), is not leaked, and so define the set TS of
+temporary secrets as TS = {Sig(A)}. The intruder’s capa-
+bilities are increased at time since from this point he can
+use Sig(A) to sign anything he knows and can send the re-
+sultant message to any principal willing to accept it, whilst
+masquerading as A. The messages that the intruder can gen-
+erate can be divided into several categories: (i) those he can
+generate before time n, (ii) those he can generate at or af-
+ter time v, and (iii) those he can never generate. In fact, we
+can go further and tag each message m in the space of the
+protocol with a label t € N° representing the earliest time
+
+Proceedings of the 18th IEEE Computer Security Foundations Workshop (CSFW’05)
+1063-6900/05 $20.00 © 2005 IEEE
+Authorized licensed use limited to: NATIONAL INSTITUTE OF TECHNOLOGY CALICUT. Downloaded on June 29,2010 at 07:49:36 UTC from IEEE Xplore. Restrictions apply.
+at which m can be assumed to be generable by the intruder
+without affecting the correctness of the protocol.
+
+For example, since usernames are generally included in
+the intruder’s initial knowledge we would tag A and B with
+0, denoting the fact that the intruder knows them at time 0.
+Similarly, since A makes the ephemeral public-key pk avail-
+able before Sig(A) is leaked we would tag it with a label
+in the range 0 < t < n. Furthermore, since Sig(A) be-
+comes available at time n we would label it as such. Finally,
+messages (such as the session-key K) which should never
+be generable by the intruder would be tagged with infin-
+ity (oo). It may be helpful to think of oo as denoting that the
+message is not generable in finite time, although for practi-
+cal purposes it will only mean that it is computationally in-
+feasible for the intruder to deduce the message.
+
+Our verification approach is based on the interpretation
+of a time tag as a rank, and we will say that a message m
+has a rank ¢ (written p(m) = 1) if it is safe to assume that
+m is generable by the intruder at time ¢. We will wish to
+prove that, at time ¢, the intruder is incapable of generat-
+ing any message with a rank greater than t. This will en-
+able us to conclude that messages such as K are actually not
+generable by the intruder until time oo and, therefore, re-
+main secret. In the remainder of this section we formalise
+the notion of a temporal rank, introduce our central theo-
+rem, and show how we can use it to prove that Boyd’s pro-
+tocol meets its forward secrecy goal.
+
+3.2. Temporal ranks
+
+A rank function is a function from the space of messages
+M to the set of natural numbers with infinity: N°.
+
+Definition 8 Let M be the message-space of a protocol.
+Then define p to be the function p: M > N®
+
+Our intention is to define a rank function over the message-
+space of NET’ such that the rank of a message m, written
+p{m), respects the time at which m becomes available to the
+intruder. Messages known initially to the intruder (m € HK)
+will have p(m) = 0. If, on the other hand, m should be un-
+available to the intruder we will typically assign it a rank
+of oo. Messages that become available to the intruder dur-
+ing the course of the protocol will be assigned some (pos-
+sibly non-zero) finite rank. A rank function effectively par-
+titions the message-space into the set of messages that the
+intruder can know (those with finite ranks) and those that
+should remain secret (those with a rank of 00). Rank func-
+tions operate on messages communicated as events in the
+traces of a CSP process. We lift ranks to events in the sense
+that p(trans.a.b.m) = p{rec.a.b.m) = p(leak.m) = p{m)
+and to sets by defining p{S) to be the rank of the highest
+ranked message in S.
+
+Generally speaking, the traces of a CSP process do not
+have any concept of time. However, we can impose a sense
+
+of discrete time onto traces by taking the time of an event
+to be its position in a trace. We define the leak-time of a key
+k in a trace ¢r (written 7(k, tr)) to be the position in the se-
+quence tr at which leak.k first occurs. If leak.k does not oc-
+cur in r then T{k, tr) = 00.
+
+Definition 9 Assuming that k ¢ HK, if a(leak.k in tr) then
+
+r(k,tr) = oo, else let tr = tr’ ~ Uleak.k) ~ tr” such that
+a(leak.k in tr’), then r{k, tr) = #tr’ +1
+
+The following examples will help to clarify this:
+1. If tro = (leak.k) then r{k, trp) = 1.
+
+2. If try = (trans.a.b.m, rec.b.a.m, signal.a.b.k, leak.k)
+then r(k,tr;) =4.
+
+3. If tro = (trans.a.b.my, rec.b.a.my, trans.a.b.mz) then
+T(k,tr2) = co.
+
+Note that, since leak.k is not preceded by the corresponding
+signal event in fro, iro ¢ traces(NET'’).
+
+As discussed earlier, the rank of a message may be de-
+pendent on the leak-time of some long-term key. Further-
+more, the leak-time will not generally be fixed but will oc-
+cur at different times for different traces of NET’. Rather
+than define a distinct rank function for each possible sce-
+nario we use the concept of a family of rank functions
+p, parameterised by n, such that the rank function p, will
+apply precisely when the leak-time of k in a trace tr9 €
+traces(NET’) is n. When n is understood we may omit the
+subscript and simply write p.
+
+Let T be a set of values that should not appear in any
+trace of NET’. T will usually contain the session-key k, but
+may also include long-term secrets that we disallow the in-
+truder from compromising. We are now in a position to give
+a list of conditions that, if satisfied, guarantee that no mem-
+ber of T can be discovered by the intruder in NET’. Follow-
+ing the statement of the central theorem, we discuss each
+condition in turn.
+
+Theorem 3 Let T be a set of messages and let IIK be
+the intruder’s initial knowledge. If there exists a family
+of rank functions, p, such that each member py satisfies:
+
+C1 p, (IK) —0
+C2 VSCOM meMSE mA pp{S) =t=> palm) <t
+C3. Vm €T.p,r{m) = oo
+C4 Vu c U\ {FE}, ir € traces(NET’).
+tr | {| trans.u, rec.u, signal.u |} holds p,
+C5) Vm € TS.p{leak.m) < 00
+
+then NET’ sat secret T
+
+Proof. See Appendix B.
+
+C1 — Condition C1 essentially amounts to an assump-
+tion on the initial information available to the intruder. The
+requirement that p,(IK) = 0 states that, at the start of the
+
+Proceedings of the 18th IEEE Computer Security Foundations Workshop (CSFW’05)
+1063-6900/05 $20.00 © 2005 IEEE
+Authorized licensed use limited to: NATIONAL INSTITUTE OF TECHNOLOGY CALICUT. Downloaded on June 29,2010 at 07:49:36 UTC from IEEE Xplore. Restrictions apply.
+protocol, the intruder does not know any secret or compro-
+misable keys.
+C2 — The second condition:
+
+VS OM,mEM.SE mA pp(S) =t=> palm) <1
+
+is a requirement on the generates relation, +. It says that
+if the intruder knows a set of messages S with rank #, any
+message m generated from S under should have a rank no
+greater than r. Stated another way: at any time, the intruder
+can only generate messages which are safe for him to know
+at that time. Since, from C1, we have that the intruder be-
+gins by only knowing messages of rank 0, C2 allows us to
+conclude that the intruder cannot send a message of rank co
+unless he has previously received (from some other princi-
+pal or via leak) a message with infinite rank.
+
+C3 — This is a statement about the contents of the set
+T. Since T should contain the messages (or, more correctly,
+the events) that we wish to keep secret we must ensure that
+each of these messages has a rank of oo. C3 allows us to
+conclude that this is indeed the case.
+
+C5 — The final condition is a straightforward obligation
+on the set of leakable secrets, namely, that they are assigned
+a finite rank.
+
+C4 — This condition is essentially an obligation on the
+users of the system: that no honest principal can send a mes-
+sage of infinite rank unless it has previously received a mes-
+sage of infinite rank. The specification holds p, is defined
+as follows:
+
+Definition 10
+
+holds p, =
+paltr | rec) #00 => pp(tr |) trans) # co
+
+By showing that C4 holds we rule out the possibility that
+any of the honest principals introduces a message of infi-
+nite rank, and if the network admits such a message it must
+therefore have been introduced by the intruder. (Since C1,
+C2 and C5 tell us that the intruder cannot introduce such a
+message either, the combination of C1, C2, C4 and C5 tells
+us that no infinite rank message can pass through the sys-
+tem. Since all messages in T have rank oo (C3) we can con-
+clude that all elements of T remain secret.) Curiously, the
+stronger, and more obvious, definition of ‘holding the rank’
+— where the rank of emitted messages is not greater than
+the rank of received messages — is unnecessary (see the
+proof of Theorem 3 in Appendix B).
+
+Note that C4 is a condition upon the traces of events
+communicated by each principal and it is worthwhile to
+consider how the traces of a process USER, in NET are re-
+lated to the traces involving a in NET’. Consider an arbi-
+trary trace tro € traces(NET’) restricted to the events in
+which a principal A takes part:
+
+tr, = tro | {| trans.A, rec.A, signal.A |}
+
+NET’, recall, is the parallel composition:
+NET || {| signal, leak |}]| RES
+
+which blocks the performance of the event leak.tk un-
+til signal.a.b.k has been communicated. leak events orig-
+inate at the ENEMY and not with user processes, so tra ©
+traces(USER,). Put another way, any behaviour possible by
+A in NET’ will be exhibited by USER, in NET. When we
+come to prove C4 for a given rank function it will be con-
+venient, and sufficient, to do so by inspection of the pro-
+cesses USER, together with the assumption that, whenever
+leak.Sig(A) occurs then signal.a.b.K must have previously
+been communicated.
+
+3.3. Proving Boyd’s protocol correct
+
+We now conclude our running example by showing how
+the above strategy can be used to prove that Boyd’s protocol
+provides partial forward secrecy on an unbounded network:
+
+l1oa—7 b
+2. b > a
+
+pk “na- {pk . D} sigta)
+tk}pe - (i(k) + a - na} sigeo)
+The forward secrecy goal that we wish to establish cor-
+
+responds to the following predicate (for some session-key
+K © Kp where A and B are honest):
+
+NET sat fs(K, Sig(A))
+
+We consider the CSP model of Figure 3 and look at a partic-
+ular, but arbitrarily chosen, run in which A acts as initiator
+and attempts to establish a session-key with B. Similarly,
+B acts as responder and attempts to establish the session-
+key K with A. We tailor the ENEMY process by setting
+TS = {Sig{A)}. Our goal is to construct a family of rank
+functions that satisfy conditions C1-C5 by characterising
+the times at which messages become known to the intruder.
+We define T = {K} to be the set of values that must re-
+main secret. We assume that Sig(A) becomes available to
+the intruder via the channel leak:
+
+Assumption 1 Sig(A) is unknown to the intruder until it
+appears on channel leak.
+
+Some care is needed in stating this assumption since it pre-
+sumes the intruder cannot manipulate earlier protocol mes-
+sages in a way that will cause Sig(A) to be revealed. In this
+case the assumption can be justified by applying Guttman’s
+concept of immediate safety [11]: Sig(A) is immediately
+safe since it is not known initially to the intruder and is not
+sent as a component of any message. Under the perfect en-
+cryption assumption, Sig(A) remains secret until it appears
+on channel leak.
+
+A suitable rank function is given below. We omit a for-
+mal proof but instead present a discussion of the rank func-
+tion and an informal argument as to why C1-CS hold. In
+
+Proceedings of the 18th IEEE Computer Security Foundations Workshop (CSFW’05)
+1063-6900/05 $20.00 © 2005 IEEE
+Authorized licensed use limited to: NATIONAL INSTITUTE OF TECHNOLOGY CALICUT. Downloaded on June 29,2010 at 07:49:36 UTC from IEEE Xplore. Restrictions apply.
+particular, we show how the restriction of NET to NET’ is
+fundamental to the proof strategy.
+
+We begin by defining the rank of usernames and nonces,
+which in both cases we set to be 0:
+
+USERNAMES) p,({u) = O
+NONCES Pn(na) 0
+
+We assume that the intruder has all usernames in his ini-
+tial knowledge. Since the protocol uses public nonces we
+must assign them a finite rank. However, it turns out that
+the protocol is still secure if we assume, as we do here, that
+they are known to the intruder initially (by assigning a rank
+of 0). The idea of assigning a lower rank to a message than
+is strictly necessary is a useful trick that can help to reduce
+the complexity of a rank function. It is sound since it as-
+sumes the worst-case: if we can prove security in this con-
+text then the security goal will still hold if we later decide
+to assign the message a higher rank.
+
+pr{h(m)) = Pn(m)
+Pn(my - m2) = max(pn(m), Pr(mz2))
+
+HASHES
+PAIRS
+
+We define the rank of a hashed message as equal to the
+rank of the unhashed message, since the intruder knows
+the hash function # and can deduce h{m) as soon as he
+learns m. The rank of a concatenation mm - mg is the great-
+est rank of its components.
+
+EPH-KEYS prilpk) = 0
+oo if pk E PKag
+n kt =
+pr(pk™) 0 otherwise
+oo ifu=B
+SIG-KEYS prlSig{u)) = n ifu=A
+0 otherwise
+prlSig-'(u)) = 0
+oo ifk=K
+SESS-KEYS Prk) =
+0 otherwise
+
+When assigning a rank to keys, we give a rank of 0 un-
+less it is absolutely necessary to do otherwise. The inten-
+tion is to state the secrecy of just those values required to
+meet the security goal. So we assume, for example, that
+all session-keys apart from K are known initially to the in-
+truder. Note that the rank of signing-keys respects the fact
+that Sig(B) is never leaked and Sig(A) is leaked at time n.
+We assume that all other signing-keys are known to the in-
+truder from the start.
+
+AkK=K
+0 otherwise
+
+ENCRYPTS prl{k}pe) =
+
+The rank of encryptions follows from our assumption
+about the secrecy of session-keys. The intruder should never
+learn K and should never learn an encryption of K with any
+key other than those used by A to initiate to B.
+
+The most subtle aspect of this rank function is its treat-
+ment of signatures. Sig(B) is never leaked and, therefore,
+the only messages signed using Sig(B) will be those match-
+ing the pattern of the protocol messages. For each principal
+u these messages are captured by S(u):
+
+S(u) = {pk-v| pk © PKy,v € U}
+UU {h{k)-v-na|k € Ky, v € U,na € N}
+
+where PK, = (J
+tures as follows:
+
+veU PK,,. We define the rank of signa-
+
+if B
+SIGNATURES pyl{m}sigc)) = 0 ifm € 5(B)
+
+oo otherwise
+
+0 ifme S{A)
+Pal{in}sigay) =  ¥ max(pn(m), 2)
+otherwise
+
+Pall} sigtu)) Prlm) (u ¢ {A, B})
+
+The interesting case involves the key Sig(A). Before time
+nthe only messages signed with Sig(A) are those that the
+protocol designer intended: the messages in the set S{A).
+We can safely assume that such messages are available to
+the intruder initially, and so assign them a rank of 0. After
+n, however, the intruder can sign any message m he knows
+using Sig{A). In this case, the rank of the resultant message
+is the greater of the two ranks p,(m) and n.
+
+Since the intruder cannot engage in events on the signal
+channel, we can safely define p,(signal.a.b.k) =0.
+
+Informally, the set /7K can be constructed to conform to
+condition C1: that all messages in /7K have a rank of 0. C3:
+that every message in T has a rank of oo — trivially holds
+since we have defined T to be the singleton set {K} and
+Pr{K) = 00.
+
+C2 may be proven by considering each of the clauses
+defining + in turn. For example, if we consider the rule
+for hashing then we need to prove that p,(m) = t >
+pr{h(m)) < 1. From the definition of the rank of hashes
+we see that p,(h(m)) = p,({m) so the implication holds.
+
+C4 must be proven for all USER, processes. If we pro-
+ceed by a case analysis we find we must show that each of
+the following processes hold the rank:
+
+Proceedings of the 18th IEEE Computer Security Foundations Workshop (CSFW’05)
+1063-6900/05 $20.00 © 2005 IEEE
+Authorized licensed use limited to: NATIONAL INSTITUTE OF TECHNOLOGY CALICUT. Downloaded on June 29,2010 at 07:49:36 UTC from IEEE Xplore. Restrictions apply.
+1. User'(a,b,pk,na) foraZ#A
+2. User'(A,b,pk,na) forb#B
+3. User! (A, B, pk, na)
+
+4. User®(b, a,k) forb~B
+5. User®(B,a,k) fora ZA
+6. User®(B,A,k)
+
+The first five cases are straightforward to prove. The fi-
+nal case, User®(B, A, k), is more interesting:
+
+User® (B,A,k) =
+rec.B.A?(pk - na - {pk - B} sigca))
+— signal.B.A.k
+— trans. B.A.({k} px - {h{k) -A - na} sigcay)
+— Stop
+
+According to the definition of C4 we are required to
+show that, if p(pk - na - {pk - b}sig¢4)) F 00 then p({K}ps -
+{h({k) A + na }sigiay) F 00.
+
+From the rank function we can immediately deduce that
+p({h(k) - A - na}sigcay) = 0. By the rank of concatena-
+tion it remains to show that p({k}p.) 4 oo. By assump-
+tion p(pk - na - {pk - B}siecay) A 00. An examination of the
+rank function shows that there are two cases to consider, ei-
+ther (i) p({pk - B}sigcay) = 0 or Gi) p({pk - Bysig¢ay) = 1.
+
+(i) If p( {pk - B} sigca)) = 0, then we can deduce that pk €
+PKag which results in p({k}px) = 0.
+
+(ii) If p({pk - B}sigca)) = n the rank function tells us
+that pk ¢ PKag and that Sig(A) has been compromised. As-
+sumption 1 then enables us to deduce that Jeak.Sig({A) has
+occurred. However, since:
+
+NET ' sat {signal.A.B.K} St_precedes {leak.Sig(A)}
+
+K must already have been established as a session-key and
+therefore k # K in {k}),. Finally, the rank function tells us
+that k # K = p({k}px) = 0, and so the condition holds.
+
+Finally, it is clear that C5 holds, since only messages
+from TS can appear on the channel leak, TS = {Sig(A)}
+and p(Sig(A)) = n.
+
+Since C1-CS5 hold of p we can conclude that NET’ guar-
+antees the secrecy of K and, by implication, we can con-
+clude that the forward secrecy goal:
+
+NET sat fs(K, Sig(A))
+
+is also met. Establishing this result only allows us to con-
+clude partial forward secrecy with respect to Sig(A). To es-
+tablish full forward secrecy we would also need to consider
+the compromise of B’s long-term key. By taking the pes-
+simistic view — that both keys become available as soon
+as the first is compromised — such a proof is straightfor-
+ward to construct.
+
+4. A further example: the Cliques protocol
+
+The Cliques protocols [1] provide key distribution ser-
+vices for dynamic groups. We consider a particular proto-
+col from the Cliques suite, A-GDH.2, which is used to es-
+tablish a Diffie-Hellman key between a group of principals
+of arbitrary size, such that each principal contributes to the
+key. The protocol consists of two stages. In the first (upflow)
+stage the group is traversed by a message that collects the
+contributions made by each principal. The final group mem-
+ber to receive this message is designated as the controller,
+who carries out the second stage by broadcasting the col-
+lected keying material to each member of the group.
+
+For a group of size s, each principal u; (i € [l,s])
+chooses an ephemeral Diffie-Hellman value x; and main-
+tains a long-term key K,, | whose inverse, Kj,, is known to
+the controller us. A suitable prime-order subgroup of Z;
+and generator g of G have been (publicly) agreed upon:
+
+Upflow: round i | i € {1,5 — 1]
+{go [ke [Lig *}
+
+uj > Wit.
+
+Broadcast: round s
+not
+
+Us — > Hijicfijs—1]: § *
+
+Upon receipt of the above, each u; computes
+gO Ke) Kot = gte& i K
+
+Since the long-term keys cancel, the commutativity of
+exponentiation means that K is shared between all of the
+principals. We can use a temporal rank function to reason
+about the forward secrecy of this protocol.
+
+We take an abstract view of the Diffie-Hellman operation
+in which every value is an exponentiation of the generator
+g by some product of random numbers and long-term keys.
+We write DH (x, y) to represent the exponentiation x” mod p
+and write DH(g,x - y) as a shorthand for DH(DH(g, x), y).
+We make use of an ingredients function z that returns the
+multiset of components that make up a message. For exam-
+ple, .(DH(g,x-x-z)) = [[x, x, z]]. We also extend the model
+of the intruder to enable him to perform exponentiation and
+to compute the multiplicative inverse of a value:
+
+DH INVERSE
+Std Std Std
+S+ DH(d,do) Std?
+
+Since computation takes place in an abelian group we
+must also address the algebraic properties of such computa-
+tion. In particular, we need to take into account the commu-
+tativity of exponentiation (since g*” = g*) and the cancel-
+lation of multiplicative inverses (since gox* = g’). Previ-
+ous work has captured the equivalence of such messages us-
+ing a term rewriting system [5]. Here it will suffice to intro-
+duce three algebraic equivalences onto the message space:
+
+Proceedings of the 18th IEEE Computer Security Foundations Workshop (CSFW’05)
+1063-6900/05 $20.00 © 2005 IEEE
+Authorized licensed use limited to: NATIONAL INSTITUTE OF TECHNOLOGY CALICUT. Downloaded on June 29,2010 at 07:49:36 UTC from IEEE Xplore. Restrictions apply.
+DH(x,y- Z) DH(x,z-y)
+DH{x,y-1) = DH(x,y)
+DH(x,X-w-Y-w }-Z) DH(x,X-Y-Z)
+
+(where any of X, Y and Z may be the identity element 1).
+These equations result in a further proof obligation on the
+rank function; namely, that whenever two Diffie-Hellman
+messages are equivalent (according to the above equations)
+we assign them the same rank.
+
+We consider (partial) forward secrecy from the point of
+view of a principal uw; = A who contributes x, = x4 to com-
+pute the key K in arun of the protocol in which u,; = C is the
+group controller and K1, = Kac is the long-term key. As be-
+fore, the protocol is modelled by a CSP process NET, and
+the security condition is:
+
+NET sat fs(K, Kc)
+
+where the process representing C performs the signal event
+forA on receipt of the upflow message, and leak.K4c signals
+that K4c has been compromised. In this instance we adapt
+our intruder process ENEMY so that no key other than K4c
+can be leaked.
+
+As before, we consider the restricted process NET’
+which satisfies the condition that, in any trace of NET’,
+an occurrence of leak.K4c is preceded by signal.A.C.K.
+We define n = 1{Kac,tr) as the time at which the key
+Kac is compromised. Our goal is to construct a fam-
+ily of rank functions, parameterised by n, that charac-
+terises the messages that can occur before, at, and after
+time n.
+
+We assign a rank of n to the compromised long-term key
+Kac:
+
+n ifk= Kac
+pilk) =< of ifk=KycAuFE
+0 otherwise
+
+Assigning a rank to Diffie-Hellman values is non-trivial, but
+we can make use of the fact that the group controller, C,
+only ever transmits messages to which he has added both a
+long-term secret and an ephemeral secret. Other principals
+will only transmit messages to which they have added an
+ephemeral secret. Let cs(d) be the number of C’s ephemeral
+secrets and /7(d) the number of long-term secrets in a Diffie-
+Hellman value d. Formally, if LK is the set of all long-
+term secrets shared by honest principals and S° is the set
+of ephemeral secrets known to the controller C, define:
+
+cs(d) = #(S° < c(d))
+
+itd) = #(LK <2(d))
+(where U <) R is the relation R restricted to domain U). Us-
+ing this, we define the rank of a Diffie-Hellman value d as:
+
+o(d) = " i lex(d) + it(d)) mod 2 =0
+
+Unfortunately, we find that this function does not satisfy
+condition C2 of Theorem 3: the intruder is able to pro-
+duce a message of rank > n from messages with rank
+<n. Consider the case where the intruder uses the mes-
+sage DH(g, x4) (rank 0) and the key K4c (rank n) to pro-
+duce the message DH(g, x4 - K4c). Since DH(g, x4 - Kac)
+contains one long-term secret and none of the controller’s
+ephemeral secrets it receives a rank of oo and so C2 fails.
+
+Generally speaking, we cannot conclude protocol inse-
+curity from the failure of a rank function since a different
+rank function may exist which is sufficient to prove proto-
+col correctness. In this case, however, the failure leads us to
+deduce the following attack (described for a group of size
+3):
+
+1. A-B {g, 3%}
+
+2. BoC {oo gee}
+3a. C—>E(A) : grexeKac
+
+3a’ E(C) >A : g*
+
+3b. COB :
+
+xaxcKec
+§
+
+In the attack, the intruder observes the first two proto-
+col messages (noting the value g**“# in message 2), inter-
+cepts A’s component of the broadcast message from C (3a)
+and replaces it with g*#(3a’). On receipt of the broadcast,
+A computes the key gtekac xa, At a later stage K4c becomes
+available to the intruder who then deduces K,c and uses
+the value g*“** (remembered from earlier) to compute the
+key gic’, The intruder now shares a key with A, mark-
+ing the failure of forward secrecy.
+
+This attack is a simpler version of one proposed by
+Pereira and Quisquater [20] who demonstrated attacks on
+each of the main security goals of the Cliques protocols.
+The same authors have more recently shown that any pro-
+tocols built using the rationale of Cliques are irreparably
+flawed, at least in situations where the group contains four
+or more principals [21].
+
+5. Discussion
+
+As promised, we now discuss why the standard (two-
+valued) rank function approach is incapable of verifying
+forward secrecy properties.
+
+In the original rank function approach [23] positive ranks
+were used to denote public messages and non-positive ranks
+were assigned to secret messages. It was soon discovered
+[13] that this is equivalent to using just two ranks, pub for
+public and sec for secret messages”. This binary view of se-
+crecy allows us to make all-or-nothing assertions about the
+
+2 Previous work has tended to use the ranks 0 and 1 to denote secret and
+public messages. For the temporal ranks described above we use 0 for
+a different purpose, namely, to denote messages available to the in-
+truder at the start of a protocol. We use the emotive ranks pub and
+sec in this discussion to avoid confusion.
+
+Proceedings of the 18th IEEE Computer Security Foundations Workshop (CSFW’05)
+1063-6900/05 $20.00 © 2005 IEEE
+Authorized licensed use limited to: NATIONAL INSTITUTE OF TECHNOLOGY CALICUT. Downloaded on June 29,2010 at 07:49:36 UTC from IEEE Xplore. Restrictions apply.
+secrecy of messages: a message m is either completely se-
+cret (ep(m) = sec) or completely public (p{m) = pub).
+In fact, it turns out that setting p(m) = pub is equivalent
+to saying that it should be safe for the intruder to know m
+at the start of the protocol. This can be stated another way.
+Consider some protocol P, and a (two-valued) rank func-
+tion p that is sufficient to prove that P meets some secrecy
+goal with respect to the intruder’s initial knowledge: /K°.
+If there exists a message m ¢ ITK® with p(m) = pub then p
+is also sufficient to show that P meets the same secrecy goal
+with respect to the initial knowledge IK! = IIK® U {ml}.
+Recall that, for a security goal expressed as a trace speci-
+fication, the existence of a rank function allows us to con-
+clude that the protocol meets the security goal.
+
+Theorem 4 Let p be a rank function with respect to the in-
+truder’s initial knowledge IIK®. If there exists some m ¢
+HIK® satisfying p(m) = pub then p is a rank function with
+respect to IIK! = IIK° U {m}.
+
+Proof. The two-valued central rank theorem [23] gives four
+healthiness conditions that a rank function must satisfy. It
+is straightforward to show that, for each of these, if p sat-
+isfies the condition w.r.t I[K® then p must also satisfy the
+condition w.r.t 7K?. O
+
+This goes against intuition. A message m may become
+available to the intruder at some point in a protocol run,
+but this does certainly not mean that the message should
+be known to the intruder initially. In fact, Heather [12] has
+given an example of a (contrived) protocol that contains a
+temporary secret — a value that must remain secret for a
+protocol to reach its secrecy goal but may then be safely
+leaked — and has shown that such protocols, even if cor-
+rect, are unverifiable using two-valued rank functions. Ar-
+guing pragmatically, this incompleteness is only of theoret-
+ical interest unless it can be shown to hamper our ability
+to reason about real (i.e., uncontrived) protocols. However,
+since compromised keys are temporary secrets, we are faced
+with the conclusion that forward secrecy properties are un-
+verifiable using the standard approach.
+
+We can illustrate this with an example. Consider an in-
+stance of the Boyd protocol, modified so that A makes
+Sig(A) public after the key exchange has taken place:
+
+1 A> B PK «NA - {PK - B}sigt)
+2 Bo A {K}pw -{h(K) -A- NA} sigcp)
+3 A 3 B Sig(A)
+
+The results of the previous section allow us to conclude
+that a run of the protocol should provide forward secrecy;
+that, even after Sig(A) is leaked, the session-key K should
+remain secret. To see why a two-valued rank function can-
+not be used to prove this property we can attempt to cre-
+ate one. We assume that the usernames of principals are
+public; in particular, p(A) = pub. Since Sig{A) is sent in
+the clear we are forced to set p(Sig(A)) = pub. For any
+
+ephemeral key-pair (PK’, SK’) invented by the intruder we
+have p(PK’) = p(SK"') = pub, and since the intruder can
+use these facts to construct the message {PK’ - B} sig¢4) We
+are compelled to set p({PK’ - B}sigc4)) = pub. Now, if
+the intruder, masquerading as A, sends this message to B,
+B will respond with {K}px- and the intruder can use SK’
+to deduce the session-key K. We are therefore forced to set
+p{K) = pub, whereas our hope was for K to remain secret.
+Some thought leads us to conclude that this attack will not
+work since Sig(A) is not made public until after K has been
+accepted by A. However, Theorem 4 tells us that rank func-
+tions cannot distinguish a message that is made public at the
+end of a protocol from a message that is public at the start
+of the protocol. Therefore, using a two-valued rank func-
+tion means that setting p(Sig(A)) = pub is the same as say-
+ing that Sig(A) € IK. If Sig(A) is known to the intruder at
+the start then the protocol clearly cannot guarantee the se-
+crecy of K.
+
+A tank function is an abstraction technique that allows
+us to prove trace specifications of CSP processes without
+requiring us to consider the traces directly. A trace records
+one possible history of a process. In the above example, if
+the event trans.A.B.Sig({A) appears in a trace, it will always
+be preceded by the event rec.A.B.{K}px: -... , represent-
+ing the fact that A accepts the session-key before Sig{A) is
+leaked. Thus, a trace does not simply convey information
+about which messages appear, but also when they appear. A
+two-valued rank function abstracts away all of the temporal
+information present in the trace and just tells us what mes-
+sages can occur. However, for protocols containing tempo-
+rary secrets, this temporal information is vital if we are to
+prove their correctness. In such cases two-valued rank func-
+tions abstract away too much.
+
+Temporal ranks overcome this problem by lifting state
+information from the trace into the rank function. A tempo-
+ral rank function for the example above would say that the
+password is leaked at some time n and set p(Sig(A)) = n.
+The ranks of other messages pivot around n in the sense
+that a message made public before n is assigned some rank
+0 <r <nanda message available at or after n is assigned a
+rank in the range n < r < oo. Crucially, the offending mes-
+sage {PK’ - B}sig¢4) would be assigned a rank of n and the
+message {K}px would be assigned a rank less than n, rep-
+resenting the fact that A’s reception of the session-key pre-
+cedes the compromise of the password. At time 1, A is there-
+fore unwilling to accept the intruder’s faked message and so
+the forward secrecy property holds.
+
+6. Conclusion
+
+In this paper we have shown how forward secrecy prop-
+erties of crypto-protocols can be expressed and reasoned
+about using rank functions. We have introduced the concept
+
+Proceedings of the 18th IEEE Computer Security Foundations Workshop (CSFW’05)
+1063-6900/05 $20.00 © 2005 IEEE
+Authorized licensed use limited to: NATIONAL INSTITUTE OF TECHNOLOGY CALICUT. Downloaded on June 29,2010 at 07:49:36 UTC from IEEE Xplore. Restrictions apply.
+of a temporal rank function that not only allows us to rea-
+son about what messages an attacker can deduce, but when
+in the protocol he can deduce them. We have applied the ap-
+proach to two examples, establishing a proof of correctness
+in one case and rediscovering an attack in the other. Both
+of these examples considered a protocol running on an un-
+bounded network that allows principals to engage in arbi-
+trarily many protocol runs concurrently. We also described
+the motivation for using temporal ranks by demonstrating
+that some protocols may be unverifiable when using tech-
+niques that classify values as simply public or secret.
+
+The present work can be seen as contributing to a grow-
+ing body of research that aims to move beyond the familiar
+realms of perfect encryption, authentication, and secrecy, by
+relaxing the restrictions on the intruder and considering the
+wider class of security properties that become relevant as a
+result.
+
+It is interesting to note that all of the rank functions given
+in this paper are three valued: 0, n and oo and, in fact, it
+would have been sufficient to fix at some arbitrary finite,
+non-zero, value. In general, a temporal rank function will be
+three-valued if all compromised values are assumed to be
+leaked at the same time. In the worst case, a temporal rank
+function with & separate leak points will have k + 2 distinct
+ranks. It is not clear whether, in practice, more than three
+ranks will ever be required. If three ranks are indeed suf-
+ficient, then the theory presented above should almost cer-
+tainly be refined to reflect this fact. In seeking to present
+a general theory we have had to introduce some concepts
+(such as the idea of a family of functions) which would be
+redundant in a three-rank theory.
+
+A temporal rank function can be viewed as establish-
+ing a hierarchy of secrecy, where a message my is less se-
+cret than a message mp if p(m1) < p(m2). One message
+is therefore more secret than another if it must remain se-
+cret for longer. Such a fine-grained notion of secrecy has
+proven useful in the present work, and it would be interest-
+ing to consider whether temporal ranks can be applied in a
+more general setting.
+
+Ata higher level of abstraction, our treatment of forward
+secrecy allows us to form a rather natural hierarchy of se-
+crecy specifications, since, in our model, secrecy is implied
+by the presence of partial forward secrecy and, in turn, par-
+tial forward secrecy is implied by the presence of full for-
+ward secrecy. This invites us to verify security protocols in a
+similarly hierarchical way; either by working upwards from
+secrecy or downwards from some stronger condition. The
+top-down approach (starting with, say, full forward secrecy)
+would tend to involve a more difficult proof but would have
+the pleasing side-effect of guaranteeing all weaker secrecy
+goals by implication. Developing useful notions of secrecy
+that extend this hierarchy, in either direction, seems an in-
+teresting research challenge.
+
+7. Acknowledgements
+
+Thanks to Colin Boyd for responding to our questions
+and to Gavin Lowe, whose critique of our earlier approach
+[6] prompted the present work. Martin Green, Neil Evans
+and the programme committees of WITS’05 and CSFW-18
+made many valuable comments on various incarnations of
+this paper.
+
+REFERENCES
+[1] G. Ateniese, M. Steiner, and G. Tsudik. Authenticated
+group key agreement and friends. In Proceedings of the 5th
+ACM Conference on Computer and Communication Secu-
+rity. ACM Press, 2000.
+
+[2] S. M. Bellovin and M. Merritt. Encrypted key exchange:
+Password-based protocols secure against dictionary attacks.
+In Proceedings of the IEEE Symposium on Research in Se-
+curity and Privacy. IEEE Computer Society Press, 1992.
+
+[3] C. Boyd and A. Mathuria. Protocols for Authentication and
+Key Establishment. Springer-Verlag, 2003.
+
+[4] E. Bresson, O. Chevassut, and D. Pointcheval. Dynamic
+
+group Diffie-Hellman key exchange under standard assump-
+
+tions (Ext. abstract). In Advances in Cryptology: Proceed-
+ings of EUROCRYPT ’02, volume 2332 of Lecture Notes in
+
+Computer Science. Springer-Verlag, 2002.
+
+R. Delicata and S. A. Schneider. A formal model of Diffie—
+
+Hellman using CSP and rank functions. Technical Report
+
+CSD-TR-03-05, Department of Computer Science, Royal
+
+Holloway, University of London, 2003.
+
+[6] R. Delicata and S. A. Schneider. Towards the rank function
+verification of protocols that use temporary secrets. In Pro-
+ceedings of the Workshop on Issues in the Theory of Secu-
+rity: WITS 04, 2004.
+
+[7] W. Diffie, P. C. van Oorschot, and M. J. Wiener. Authentica-
+
+tion and authenticated key exchanges. Designs, Codes and
+
+Cryptography, 2(2), 1992.
+
+D. Dolev and A. C. Yao. On the security of public key pro-
+
+tocols. IEEE Transactions on Information Theory, IT-29(2),
+
+1983.
+
+N. Evans. Investigating security through proof. Ph.D Thesis,
+
+Royal Holloway, University of London, 2003.
+
+[10] C. G. Gunther. An identity-based key-exchange protocol.
+
+In Advances in Cryptology: Proceedings of EUROCRYPT
+*89, volume 0434 of Lecture Notes in Computer Science.
+Springer-Verlag, 1989.
+
+[5
+
+=
+
+[8
+
+oe
+
+[9
+
+=
+
+[11] J. D. Guttman. Key compromise, strand spaces, and the au-
+thentication tests. In Proceedings of Mathematical Founda-
+tions of Programming Semantics: MFPS 17, volume 47 of
+Electronic Notes in Theoretical Computer Science. Elsevier,
+2001.
+
+[12] J. A. Heather. Strand spaces and rank functions: More than
+distant cousins. In Proceedings of The 15th IEEE Com-
+puter Security Foundations Workshop. IEEE Computer So-
+ciety Press, 2002.
+
+Proceedings of the 18th IEEE Computer Security Foundations Workshop (CSFW’05)
+1063-6900/05 $20.00 © 2005 IEEE
+Authorized licensed use limited to: NATIONAL INSTITUTE OF TECHNOLOGY CALICUT. Downloaded on June 29,2010 at 07:49:36 UTC from IEEE Xplore. Restrictions apply.
+[13] J. A. Heather and S. A. Schneider. Towards automatic veri-
+fication of security protocols on an unbounded network. In
+Proceedings of The 13th IEEE Computer Security Founda-
+tions Workshop. IEEE Computer Society Press, 2000.
+
+[14] M. Just and S. Vaudenay. Authenticated multi-party key
+agreement. In Advances in Cryptology: Proceedings of ASI-
+ACRYPT °96, volume 1163 of Lecture Notes in Computer
+Science. Springer-Verlag, 1996.
+
+[15] H. Krawczyk. SIGMA: The ‘SIGn and MAc’ approach to
+authenticated Diffie-Hellman and its use in the IKE proto-
+cols. In Advances in Cryptology: Proceedings of CRYPTO
+03, volume 2729 of Lectures Notes in Computer Science.
+Springer-Verlag, 1996.
+
+[16] H. Krawczyk. SKEME: A versatile secure key exchange
+mechanism for internet. In Symposium on Network and
+Distributed System Security. IEEE Computer Society Press,
+1996.
+
+[17] A. J. Menezes, M. Qu, and 8. A. Vanstone. Some new key
+agreement protocols providing mutual implicit authentica-
+tion. In Workshop on Selected Areas in Cryptography: SAC
+95, 1995.
+
+[18] D. Park, C. Boyd, and S.-J. Moon. Forward secrecy and
+its application to future mobile communications security.
+In Proceedings of Public Key Cryptography: Third Inter-
+national Workshop on Practice and Theory in Public Key
+Cryptosystems: PKC 2000, volume 1751 of Lecture Notes
+in Computer Science. Springer-Verlag, 2000.
+
+[19] O. Pereira. Modelling and security analysis of authenti-
+cated group key agreement protocols. Ph.D Thesis, Univer-
+sité Catholique de Louvain, 2003.
+
+[20] O. Pereira and J.-J. Quisquater. Security analysis of the
+Cliques protocols suites. In Proceedings of the 14th IEEE
+Computer Security Foundations Workshop. IEEE Computer
+Society Press, 2001.
+
+[21] O. Pereira and J.-J. Quisquater. Generic insecurity of
+Cliques-type authenticated group key agreement protocols.
+In Proceedings of the 17th IEEE Computer Security Founda-
+tions Workshop. IEEE Computer Society Press, 2004.
+
+[22] A. W. Roscoe. The Theory and Practice of Concurrency.
+Prentice Hall, 1997.
+
+[23] S. A. Schneider. Verifying authentication protocols with
+CSP. In Proceedings of The 10th IEEE Computer Security
+Foundations Workshop. IEEE Computer Society Press, 1997.
+
+[24] S. A. Schneider. Concurrent and Real-time Systems: The
+CSP Approach. John Wiley and Sons, Ltd, 2000.
+
+[25] S. A. Schneider. Verifying authentication protocol imple-
+mentations. In Proceedings of the 5th international confer-
+ence on Formal Methods for Open Object-Based Distributed
+Systems, 2002.
+
+[26] M. J. Wiener. Performance comparison of public-key cryp-
+tosystems. Cryptobytes, 4(1), 1998.
+
+A. CSP
+
+CSP is a notation for describing concurrent systems in
+terms of processes which perform events. Communication
+
+is achieved by prefixing. The communication a — P is the
+process that performs the event a and then behaves like P.
+Events may be structured in terms of channels where the
+event c.v denotes the communication of value v on channel
+c. Compound events can be used to model input and out-
+put where, by convention, input is represented using ‘?’ and
+output using ‘!’: so, for example, c?v : T — P(v) is the pro-
+cess that inputs on channel c any value v of type T and then
+behaves as P(v). The concept of choice is modelled with the
+O operator such that the process P = a — PO b > Pis
+prepared to perform either a or b, and the choice is deter-
+mined by the environment. The generalised choice operator
+U., P; allows the environment to choose between a fam-
+
+ily of processes {P; | i € I}. Conditional choice can be
+written in the form — if G then P else Q —— where G is a
+boolean guard.
+
+Processes may be composed in parallel to perform hand-
+shaking synchronisation. The process P || X]| Q forces the
+processes P and Q to agree on all events in the set X. When
+an event x € X is performed by P |[X]| QO, both processes
+perform the event. Events outside of X may proceed inde-
+pendently. The communication set X will often be written
+in the form {| x1,x2 |}; the {| |} syntax denotes the clo-
+sure of events on channels x; and x2. An interleaving of two
+processes P ||| Q allows P and Q to proceed independently
+of one another, without synchronising on any events. If an
+event is performed that both P and Q are willing to commu-
+nicate, only one process actually performs the event, and
+is chosen non-deterministically. The generalised interleav-
+ing operator | | lier P; models the interleaving of a family of
+
+ 
+
+processes {P; | i € J}. D is the set of all events. Two partic-
+ularly important processes are Stop and RUN4. Stop is the
+process that does nothing at all. RUN4:
+
+RUN, =?x : A — RUN,
+
+is the process which, for a set of events A C &, is always
+willing to communicate any member of A that the environ-
+ment desires.
+
+Several semantic models of CSP exist, and in this paper
+we make use of the simplest: the traces model. The traces
+model describes each process P in terms of its observable
+events, traces(P), the set of all possible sequences of events
+that P can perform. traces(P) is always non-empty, since
+every process can perform the empty trace (), and traces(P)
+
+is prefix closed, meaning that if s “1 is a trace, then so is
+s. For example, traces(a > b — Stop) = {(), (a), (a, b)}.
+We write #1r to mean the length of a trace tr. Each CSP
+construct has an associated rule for the calculation of traces.
+The traces of a process define the possible behaviour of that
+process and are sufficient for reasoning about safety prop-
+erties of a system.
+
+If an event e occurs in a trace trp we write e in tro. Con-
+versely, if e does not occur in tro we write a(e in tro) .
+
+Proceedings of the 18th IEEE Computer Security Foundations Workshop (CSFW’05)
+1063-6900/05 $20.00 © 2005 IEEE
+Authorized licensed use limited to: NATIONAL INSTITUTE OF TECHNOLOGY CALICUT. Downloaded on June 29,2010 at 07:49:36 UTC from IEEE Xplore. Restrictions apply.
+tro | T is the sequence frog restricted to T: the sequence
+whose members are those of tro which are in T. For exam-
+ple, if tro = (a,b,a,c) then tro | {a,c} = (a,a,c). If C
+is a set of channels then trg J} C is the sequence of values
+that have been communicated along channels in C in tro.
+If tro = (input.a, output.b, input.c) then tro 4) {output} =
+(b). When C is understood as the singleton set {c} we may
+omit the braces and write tro |) c in preference to tro |) {c}.
+
+A modern presentation of the CSP language and its se-
+mantic models can be found in [22, 24].
+
+B. Proof of Theorem 3
+To prove that NET’ sat secret T we need to show that:
+Vir € traces(NET').secret T (tr)
+
+We prove, for an arbitrary trace tro, that the existence of a
+rank function , is sufficient to conclude secret T(tr) when
+r(k, tr) =n.
+
+For a contradiction assume that CI-CS5 hold, but also
+that —(secret T(tro)). Then there exists an occurrence in fro
+of some message t € T. Since C3 tells us that p,{t) = co
+for any t € T we have that there are some messages with
+a rank of oo. Let tr; be the prefix of tr9 whose last mes-
+sage is the first message of tr9 with rank oo. The sequence
+
+tr, is the trace up to the point where the first rank oo mes-
+sage occurs.
+
+The prefix-closure of traces in processes tells us that
+tr, © traces(NET'). The last message of tr; can take one
+of three forms: leak.m, trans.u.v.m, or rec.u.v.m for some
+u, v and m, where p,(m) = oo.
+
+Case leak.m: from C5 we have that p,(leak.m) < oa,
+forcing a contradiction.
+
+Case rec.u.v.m: We have that tr, is a trace of ENEMY
+and, by Theorem 1, that (17K U (tr |) {trans, leak})) - tr |
+rec and so (IIK U (ir, |) {trans, leak})) + m. But, by defini-
+tion of tr; we have that p,(tr; |) {trans, leak}) A 00 since
+all messages in tr, apart from the last have a finite rank.
+Therefore C1 and C2 yield that p,(m) # ca, forcing a con-
+tradiction.
+
+Case trans.u.v.m: Let tr, = tr, | {trans.u, rec.u}. This
+is the portion of tr; in which USER,, participates, so tr, €
+traces(USER,,). Hence, by C4 we have that holds p,(tr,).
+Expanding the definition we have that:
+
+Paltry I) rec) F CO => paltry |) trans) # 00
+
+from which it follows that p, (tr, 4) rec) # co => palm) #
+oo. However, by definition of tro and hence tr, we have that
+pr{m) = oo, forcing a contradiction. In either case we find
+a contradiction, which establishes the theorem. oO
+
+Proceedings of the 18th IEEE Computer Security Foundations Workshop (CSFW’05)
+1063-6900/05 $20.00 © 2005 IEEE
+Authorized licensed use limited to: NATIONAL INSTITUTE OF TECHNOLOGY CALICUT. Downloaded on June 29,2010 at 07:49:36 UTC from IEEE Xplore. Restrictions apply.
+
