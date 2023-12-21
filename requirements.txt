@@ -14,7 +14,7 @@ packaging==21.3
 pandas==1.4.2
 pdfminer==20191125
 pdfminer.six==20211012
-Pillow==9.1.0
+Pillow==10.0.1
 pycparser==2.21
 pycryptodome==3.11.0
 pyparsing==3.0.8
