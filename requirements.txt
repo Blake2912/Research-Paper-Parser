@@ -3,7 +3,7 @@ cffi==1.15.0
 chardet==4.0.0
 charset-normalizer==2.0.12
 click==8.1.2
-cryptography==35.0.0
+cryptography==44.0.1
 filelock==3.6.0
 huggingface-hub==0.5.1
 idna==3.3
